@@ -60,22 +60,49 @@
   gap: 4px;
 }
 
+@media (max-width: 576px) {
+  .todo-item__controls {
+    flex-direction: column;
+  }
+}
+
 .todo-item__button {
   display: flex;
   justify-content: center;
   background-color: transparent;
   padding: 5px;
   flex-shrink: 0;
-  width: 34px;
-
-  &:hover {
-    color: var(--color-red);
-    background-color: var(--color-gray-500);
-  }
+  min-width: 34px;
+  height: 34px;
 }
 
-.todo-item__button--edit {
-  &:hover {
-    color: var(--color-blue);
+@media (hover: hover) {
+  .todo-item__button--remove {
+    &:hover {
+      color: var(--color-red);
+      background-color: var(--color-gray-500);
+    }
+  }
+
+  .todo-item__button--edit {
+    &:hover {
+      background-color: var(--color-gray-500);
+      color: var(--color-blue);
+    }
+  }
+}
+@media (hover: none) {
+  .todo-item__button--remove {
+    &:active {
+      color: var(--color-red);
+      background-color: var(--color-gray-500);
+    }
+  }
+
+  .todo-item__button--edit {
+    &:active {
+      background-color: var(--color-gray-500);
+      color: var(--color-blue);
+    }
   }
 }
