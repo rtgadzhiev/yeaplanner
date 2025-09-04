@@ -15,8 +15,10 @@
   --color-blue: #4ea8de;
   --color-blue-dark: #1e6f9f;
 
-  --border: 1px solid var(--color-purple-dark);
+  --border: 1px solid var(--color-gray-400);
   --border-radius: 8px;
+
+  --input-height: 54px;
 
   --transition-duration: 0.2s;
 }

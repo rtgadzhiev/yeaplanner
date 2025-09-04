@@ -1,0 +1,23 @@
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 16px;
+  max-height: var(--input-height);
+  border: none;
+  border-radius: var(--border-radius);
+  background-color: var(--color-blue-dark);
+  color: var(--color-gray-100);
+  font-size: 14px;
+  font-weight: 800;
+  text-align: center;
+
+  &:hover {
+    background-color: var(--color-blue);
+  }
+
+  &:active {
+    scale: 1.03;
+  }
+}
