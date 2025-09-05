@@ -2,6 +2,7 @@
   max-width: 736px;
   width: 100%;
   position: relative;
+  padding-bottom: 50px;
 }
 
 .todo__stats {
