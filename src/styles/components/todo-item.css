@@ -16,7 +16,7 @@
     position: none;
 
     & ~ .todo-item {
-      translate: 0 calc((100% + var(--todoListRowGap)) * -1);
+      translate: 0 -100%;
       transition-delay: var(--transition-duration);
       transition-duration: var(--transition-duration);
       pointer-events: none;
