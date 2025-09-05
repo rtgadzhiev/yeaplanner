@@ -19,6 +19,13 @@
   font-weight: 800;
 }
 
+@media (max-width: 360px) {
+  .todo__counter-text {
+    gap: 4px;
+    font-size: 15px;
+  }
+}
+
 .todo__counter-text--blue {
   color: var(--color-blue);
 }
@@ -59,4 +66,11 @@
 .todo__empty-message span {
   padding-top: 16px;
   font-weight: 800;
+}
+
+.todo__list,
+.todo__empty-message {
+  &:empty {
+    display: none;
+  }
 }
