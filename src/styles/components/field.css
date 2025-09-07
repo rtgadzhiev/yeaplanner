@@ -2,9 +2,6 @@
   display: flex;
   justify-content: space-between;
   gap: 8px;
-  position: absolute;
-  top: -29px;
-  width: 100%;
   min-height: var(--input-height);
 }
 

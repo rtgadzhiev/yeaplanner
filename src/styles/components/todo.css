@@ -5,8 +5,17 @@
   padding-bottom: 50px;
 }
 
+.todo__forms {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  position: absolute;
+  top: -29px;
+  width: 100%;
+}
+
 .todo__stats {
-  padding-top: 90px;
+  padding-top: 152px;
   padding-bottom: 24px;
   display: flex;
   justify-content: space-between;
