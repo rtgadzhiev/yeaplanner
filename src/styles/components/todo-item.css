@@ -8,6 +8,7 @@
   border-radius: var(--border-radius);
   border: var(--border);
   transition-duration: var(--transition-duration);
+  cursor: grab;
 
   &.is-disappearing {
     opacity: 0;
@@ -21,6 +22,10 @@
       transition-duration: var(--transition-duration);
       pointer-events: none;
     }
+  }
+
+  &.is-dragging {
+    opacity: 0.6;
   }
 }
 

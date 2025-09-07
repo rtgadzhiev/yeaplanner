@@ -57,7 +57,7 @@ function renderTasks() {
   todoListElement.innerHTML = todoItems
     .map((task) => {
       return `
-        <li class="todo__item todo-item" data-js-todo-item>
+        <li class="todo__item todo-item" data-js-todo-item draggable="true">
           <input class="todo-item__checkbox" type="checkbox" id="${task.id}" ${
         task.isChecked ? 'checked' : ''
       } data-js-todo-item-checkbox />
@@ -224,15 +224,18 @@ const onEditButtonClick = ({ target }) => {
     );
     const newTaskText = prompt('Введите новый текст задачи');
 
-    todoItems = todoItems.map((todo) => {
-      if (todo.id === checkboxElement.id) {
-        todo.title = newTaskText;
+    if (newTaskText) {
+      todoItems = todoItems.map((todo) => {
+        if (todo.id === checkboxElement.id) {
+          todo.title = newTaskText;
+          return todo;
+        }
         return todo;
-      }
-      return todo;
-    });
-    saveItemsToLocalStorage();
-    renderTasks();
+      });
+      saveItemsToLocalStorage();
+      renderTasks();
+    }
+    return;
   }
 };
 
@@ -260,3 +263,77 @@ newTaskFormElement.addEventListener('submit', onNewTaskFormSubmit);
 todoListElement.addEventListener('click', onRemoveButtonClick);
 todoListElement.addEventListener('click', onEditButtonClick);
 todoListElement.addEventListener('change', onChange);
+
+const onDragStart = ({ target }) => {
+  const isDraggable = target.hasAttribute('draggable');
+
+  if (isDraggable) {
+    target.classList.add('is-dragging');
+  }
+};
+
+function updateTasksOrder() {
+  const taskElementsArray = [...document.querySelectorAll('.todo-item')];
+  const todoItems = getItemsFromLocalStorage(localStorageKey);
+
+  const newTasksOrder = taskElementsArray.map((taskElement) => {
+    const taskId = taskElement.querySelector('input').id;
+
+    return todoItems.find((todo) => todo.id === taskId);
+  });
+
+  localStorage.setItem(localStorageKey, JSON.stringify(newTasksOrder));
+}
+
+const onDragEnd = ({ target }) => {
+  const isDraggable = target.hasAttribute('draggable');
+
+  if (isDraggable) {
+    target.classList.remove('is-dragging');
+  }
+
+  updateTasksOrder();
+};
+
+function getDragAfterElement(y) {
+  const draggableElements = [
+    ...todoListElement.querySelectorAll('.todo-item:not(.is-dragging)'),
+  ];
+
+  return draggableElements.reduce(
+    (closestTodo, todo) => {
+      const box = todo.getBoundingClientRect();
+      const offset = y - box.top - box.height / 2;
+
+      if (offset < 0 && offset > closestTodo.offset) {
+        return { offset: offset, element: todo };
+      } else {
+        return closestTodo;
+      }
+    },
+    {
+      offset: Number.NEGATIVE_INFINITY,
+    }
+  ).element;
+}
+
+const onDragOver = (event) => {
+  event.preventDefault();
+
+  const afterElement = getDragAfterElement(event.clientY);
+  const draggableElement = document.querySelector('.is-dragging');
+
+  if (!afterElement) {
+    todoListElement.append(draggableElement);
+  } else {
+    todoListElement.insertBefore(draggableElement, afterElement);
+  }
+};
+
+function bindDragAndDropEvents() {
+  todoListElement.addEventListener('dragstart', onDragStart);
+  todoListElement.addEventListener('dragend', onDragEnd);
+  todoListElement.addEventListener('dragover', onDragOver);
+}
+
+bindDragAndDropEvents();
