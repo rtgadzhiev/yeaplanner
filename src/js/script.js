@@ -27,13 +27,15 @@ const searchInputElement = searchFormElement.querySelector(
   '[ data-js-search-form-input]'
 );
 
-let todoItems = getItemsFromLocalStorage(localStorageKey);
-let filteredItems = null;
-let searchQuery = null;
+const state = {
+  todoItems: getItemsFromLocalStorage(localStorageKey),
+  filteredItems: null,
+  searchQuery: null,
+};
 
 function renderCounters() {
-  const allTasksNumber = todoItems.length;
-  const completedTasksNumber = todoItems.filter(
+  const allTasksNumber = state.todoItems.length;
+  const completedTasksNumber = state.todoItems.filter(
     (task) => task.isChecked
   ).length;
 
@@ -45,7 +47,7 @@ function renderCounters() {
 
 function renderTasks() {
   toggleDisableSearchInput();
-  const items = filteredItems ?? todoItems;
+  const items = state.filteredItems ?? state.todoItems;
 
   todoListElement.innerHTML = items
     .map((task) => {
@@ -112,8 +114,9 @@ function renderTasks() {
 }
 
 function renderEmptyMessage() {
-  const isEmptyItems = todoItems.length === 0;
-  const isEmptyFilteredItems = filteredItems && filteredItems.length === 0;
+  const isEmptyItems = state.todoItems.length === 0;
+  const isEmptyFilteredItems =
+    state.filteredItems && state.filteredItems.length === 0;
 
   emptyMessageElement.innerHTML = isEmptyItems
     ? `<svg
@@ -203,19 +206,19 @@ function render() {
 render();
 
 function addTask(title) {
-  todoItems.push({
+  state.todoItems.push({
     id: crypto?.randomUUID() ?? Date.now().toString(),
     title,
     isChecked: false,
   });
-  setItemsToLocalStorage(localStorageKey, todoItems);
+  setItemsToLocalStorage(localStorageKey, state.todoItems);
   render();
 }
 
 function removeTask(id) {
-  todoItems = todoItems.filter((todo) => todo.id !== id);
+  state.todoItems = state.todoItems.filter((todo) => todo.id !== id);
 
-  setItemsToLocalStorage(localStorageKey, todoItems);
+  setItemsToLocalStorage(localStorageKey, state.todoItems);
   render();
 }
 
@@ -259,14 +262,14 @@ const onEditButtonClick = ({ target }) => {
     const newTaskText = prompt('Введите новый текст задачи');
 
     if (newTaskText) {
-      todoItems = todoItems.map((todo) => {
+      state.todoItems = state.todoItems.map((todo) => {
         if (todo.id === checkboxElement.id) {
           todo.title = newTaskText;
           return todo;
         }
         return todo;
       });
-      setItemsToLocalStorage(localStorageKey, todoItems);
+      setItemsToLocalStorage(localStorageKey, state.todoItems);
       renderTasks();
     }
     return;
@@ -280,7 +283,7 @@ const onChange = ({ target }) => {
 };
 
 function toggleCheckedState(id) {
-  todoItems = todoItems.map((todo) => {
+  state.todoItems = state.todoItems.map((todo) => {
     if (todo.id === id) {
       return {
         ...todo,
@@ -289,7 +292,7 @@ function toggleCheckedState(id) {
     }
     return todo;
   });
-  setItemsToLocalStorage(localStorageKey, todoItems);
+  setItemsToLocalStorage(localStorageKey, state.todoItems);
   renderCounters();
 }
 
@@ -313,7 +316,7 @@ const onDragEnd = ({ target }) => {
     target.classList.remove('is-dragging');
   }
 
-  updateTasksOrder(localStorageKey, todoItems);
+  updateTasksOrder(localStorageKey, state.todoItems);
 };
 
 function getDragAfterElement(y) {
@@ -360,7 +363,7 @@ function bindDragAndDropEvents() {
 bindDragAndDropEvents();
 
 function toggleDisableSearchInput() {
-  if (todoItems.length === 0) {
+  if (state.todoItems.length === 0) {
     searchInputElement.setAttribute('disabled', true);
   } else {
     searchInputElement.removeAttribute('disabled');
@@ -372,15 +375,15 @@ const onSearchFormSubmit = (event) => {
 };
 
 function filterTasks() {
-  const queryFormatted = searchQuery.toLowerCase();
+  const queryFormatted = state.searchQuery.toLowerCase();
 
-  filteredItems = todoItems.filter(({ title }) => {
+  state.filteredItems = state.todoItems.filter(({ title }) => {
     const titleFormatted = title.toLowerCase();
 
     return titleFormatted.includes(queryFormatted);
   });
 
-  if (filteredItems.length === 0) {
+  if (state.filteredItems.length === 0) {
     renderEmptyMessage();
     renderTasks();
   } else {
@@ -389,15 +392,15 @@ function filterTasks() {
 }
 
 function resetFilter() {
-  filteredItems = null;
+  state.filteredItems = null;
   renderEmptyMessage();
   renderTasks();
 }
 
 const onSearchInputChange = ({ target }) => {
-  searchQuery = target.value.trim();
+  state.searchQuery = target.value.trim();
 
-  if (searchQuery.length > 0) {
+  if (state.searchQuery.length > 0) {
     filterTasks();
   } else {
     resetFilter();
