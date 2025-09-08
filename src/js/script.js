@@ -1,9 +1,14 @@
+import {
+  getItemsFromLocalStorage,
+  setItemsToLocalStorage,
+  updateTasksOrder,
+} from './utils/localStorage.js';
+
+const localStorageKey = 'todo-items';
+
 const newTaskFormElement = document.querySelector('[data-js-new-task-form]');
 const newTaskFormInputElement = document.querySelector(
   '[data-js-new-task-form-input]'
-);
-const newTaskFormButtonElement = document.querySelector(
-  '[data-js-new-task-form-button]'
 );
 
 const allTasksCounterElement = document.querySelector(
@@ -12,37 +17,15 @@ const allTasksCounterElement = document.querySelector(
 const completedTasksCounterElement = document.querySelector(
   '[data-js-completed-tasks-counter]'
 );
-
 const todoListElement = document.querySelector('[data-js-todo-list]');
-
 const emptyMessageElement = document.querySelector(
   '[data-js-todo-empty-message]'
 );
-
-const localStorageKey = 'todo-items';
 
 const searchFormElement = document.querySelector('[data-js-search-form]');
 const searchInputElement = searchFormElement.querySelector(
   '[ data-js-search-form-input]'
 );
-
-function getItemsFromLocalStorage(localStorageKey) {
-  const data = localStorage.getItem(localStorageKey);
-
-  if (!data) return [];
-
-  try {
-    const parsedData = JSON.parse(data);
-    return Array.isArray(parsedData) ? parsedData : [];
-  } catch {
-    console.error('Parse error!');
-    return [];
-  }
-}
-
-function saveItemsToLocalStorage() {
-  localStorage.setItem(localStorageKey, JSON.stringify(todoItems));
-}
 
 let todoItems = getItemsFromLocalStorage(localStorageKey);
 let filteredItems = null;
@@ -225,14 +208,14 @@ function addTask(title) {
     title,
     isChecked: false,
   });
-  saveItemsToLocalStorage();
+  setItemsToLocalStorage(localStorageKey, todoItems);
   render();
 }
 
 function removeTask(id) {
   todoItems = todoItems.filter((todo) => todo.id !== id);
 
-  saveItemsToLocalStorage();
+  setItemsToLocalStorage(localStorageKey, todoItems);
   render();
 }
 
@@ -283,7 +266,7 @@ const onEditButtonClick = ({ target }) => {
         }
         return todo;
       });
-      saveItemsToLocalStorage();
+      setItemsToLocalStorage(localStorageKey, todoItems);
       renderTasks();
     }
     return;
@@ -306,7 +289,7 @@ function toggleCheckedState(id) {
     }
     return todo;
   });
-  saveItemsToLocalStorage();
+  setItemsToLocalStorage(localStorageKey, todoItems);
   renderCounters();
 }
 
@@ -323,19 +306,6 @@ const onDragStart = ({ target }) => {
   }
 };
 
-function updateTasksOrder() {
-  const taskElementsArray = [...document.querySelectorAll('.todo-item')];
-  const todoItems = getItemsFromLocalStorage(localStorageKey);
-
-  const newTasksOrder = taskElementsArray.map((taskElement) => {
-    const taskId = taskElement.querySelector('input').id;
-
-    return todoItems.find((todo) => todo.id === taskId);
-  });
-
-  localStorage.setItem(localStorageKey, JSON.stringify(newTasksOrder));
-}
-
 const onDragEnd = ({ target }) => {
   const isDraggable = target.hasAttribute('draggable');
 
@@ -343,7 +313,7 @@ const onDragEnd = ({ target }) => {
     target.classList.remove('is-dragging');
   }
 
-  updateTasksOrder();
+  updateTasksOrder(localStorageKey, todoItems);
 };
 
 function getDragAfterElement(y) {
