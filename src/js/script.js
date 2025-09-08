@@ -21,6 +21,11 @@ const emptyMessageElement = document.querySelector(
 
 const localStorageKey = 'todo-items';
 
+const searchFormElement = document.querySelector('[data-js-search-form]');
+const searchInputElement = searchFormElement.querySelector(
+  '[ data-js-search-form-input]'
+);
+
 function getItemsFromLocalStorage(localStorageKey) {
   const data = localStorage.getItem(localStorageKey);
 
@@ -56,6 +61,7 @@ function renderCounters() {
 }
 
 function renderTasks() {
+  toggleDisableSearchInput();
   const items = filteredItems ?? todoItems;
 
   todoListElement.innerHTML = items
@@ -225,6 +231,7 @@ function addTask(title) {
 
 function removeTask(id) {
   todoItems = todoItems.filter((todo) => todo.id !== id);
+
   saveItemsToLocalStorage();
   render();
 }
@@ -382,10 +389,13 @@ function bindDragAndDropEvents() {
 
 bindDragAndDropEvents();
 
-const searchFormElement = document.querySelector('[data-js-search-form]');
-const searchInputElement = searchFormElement.querySelector(
-  '[ data-js-search-form-input]'
-);
+function toggleDisableSearchInput() {
+  if (todoItems.length === 0) {
+    searchInputElement.setAttribute('disabled', true);
+  } else {
+    searchInputElement.removeAttribute('disabled');
+  }
+}
 
 const onSearchFormSubmit = (event) => {
   event.preventDefault();
