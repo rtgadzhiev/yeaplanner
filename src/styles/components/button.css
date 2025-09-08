@@ -15,10 +15,28 @@
   text-align: center;
 }
 
+.button__plus-icon {
+  rotate: 0;
+  transition-duration: var(--transition-duration);
+}
+
 @media (hover: hover) {
   .button:hover {
     scale: 1.03;
     background-color: var(--color-blue);
+
+    .button__plus-icon {
+      rotate: 90deg;
+    }
+  }
+
+  .button:active {
+    scale: 0.95;
+    background-color: var(--color-purple);
+
+    .button__plus-icon {
+      rotate: 90deg;
+    }
   }
 }
 @media (hover: none) {

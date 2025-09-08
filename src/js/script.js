@@ -40,6 +40,7 @@ function saveItemsToLocalStorage() {
 }
 
 let todoItems = getItemsFromLocalStorage(localStorageKey);
+let filteredItems = null;
 
 function renderCounters() {
   const allTasksNumber = todoItems.length;
@@ -54,7 +55,9 @@ function renderCounters() {
 }
 
 function renderTasks() {
-  todoListElement.innerHTML = todoItems
+  const items = filteredItems ?? todoItems;
+
+  todoListElement.innerHTML = items
     .map((task) => {
       return `
         <li class="todo__item todo-item" data-js-todo-item draggable="true">
@@ -337,3 +340,42 @@ function bindDragAndDropEvents() {
 }
 
 bindDragAndDropEvents();
+
+const searchFormElement = document.querySelector('[data-js-search-form]');
+const searchInputElement = searchFormElement.querySelector(
+  '[ data-js-search-form-input]'
+);
+
+const onSearchFormSubmit = (event) => {
+  event.preventDefault();
+};
+
+function filterTasks(value) {
+  const queryFormatted = value.toLowerCase();
+
+  filteredItems = todoItems.filter(({ title }) => {
+    const titleFormatted = title.toLowerCase();
+
+    return titleFormatted.includes(queryFormatted);
+  });
+
+  renderTasks();
+}
+
+function resetFilter() {
+  filteredItems = null;
+  renderTasks();
+}
+
+const onSearchInputChange = ({ target }) => {
+  const value = target.value.trim();
+
+  if (value.length > 0) {
+    filterTasks(value);
+  } else {
+    resetFilter();
+  }
+};
+
+searchFormElement.addEventListener('submit', onSearchFormSubmit);
+searchInputElement.addEventListener('input', onSearchInputChange);
