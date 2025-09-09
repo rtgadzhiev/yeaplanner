@@ -1,7 +1,7 @@
-import { createAppState } from './appState.js';
-import { createRenderManager } from './renderManager.js';
-import { createEventHandlers } from './eventHandlers.js';
-import { initDragAndDrop } from './dragAndDrop.js';
+import createAppState from './appState.js';
+import createRenderManager from './renderManager.js';
+import createEventHandlers from './eventHandlers.js';
+import initDragAndDrop from './dragAndDrop.js';
 
 const newTaskFormElement = document.querySelector('[data-js-new-task-form]');
 const newTaskFormInputElement = document.querySelector(

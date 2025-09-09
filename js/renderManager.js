@@ -1,4 +1,4 @@
-export function createRenderManager(
+export default function createRenderManager(
   allTasksCounterElement,
   completedTasksCounterElement,
   todoListElement,

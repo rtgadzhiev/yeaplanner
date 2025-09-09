@@ -1,4 +1,4 @@
-export function createEventHandlers(
+export default function createEventHandlers(
   appState,
   renderManager,
   newTaskFormInputElement,

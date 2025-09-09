@@ -1,4 +1,4 @@
-export function createAppState(localStorageKey = 'todo-items') {
+export default function createAppState(localStorageKey = 'todo-items') {
   const state = {
     todoItems: getItemsFromLocalStorage(localStorageKey),
     filteredItems: null,
