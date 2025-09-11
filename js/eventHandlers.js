@@ -84,7 +84,11 @@ export default function createEventHandlers(
           return todo;
         });
         appState.setItemsToLocalStorage(appState.state.todoItems);
-        renderManager.renderTasks(appState.state.todoItems);
+        appState.filterTasks();
+        renderManager.renderTasks(
+          appState.state.filteredItems,
+          appState.state.todoItems
+        );
       }
       return;
     }
