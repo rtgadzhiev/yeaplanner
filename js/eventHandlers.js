@@ -59,7 +59,13 @@ export default function createEventHandlers(
       const checkboxElement = taskElement.querySelector(
         '[data-js-todo-item-checkbox]'
       );
-      const newTaskText = prompt('Введите новый текст задачи');
+      const taskLabelElement = taskElement.querySelector(
+        '[data-js-todo-label]'
+      );
+      const newTaskText = prompt(
+        'Введите новый текст задачи',
+        `${taskLabelElement.textContent.trim()}`
+      );
 
       if (newTaskText) {
         appState.state.todoItems = appState.state.todoItems.map((todo) => {
