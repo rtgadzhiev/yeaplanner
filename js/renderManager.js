@@ -176,7 +176,7 @@ export default function createRenderManager(
 
   function render(filteredItems, todoItems) {
     renderCounters(todoItems);
-    renderTasks(todoItems);
+    renderTasks(filteredItems, todoItems);
     renderEmptyMessage(filteredItems, todoItems);
   }
 

@@ -11,6 +11,7 @@ export default function createEventHandlers(
 
     if (newTaskTitle.trim().length) {
       appState.addTask(newTaskTitle);
+      appState.filterTasks();
       renderManager.render(
         appState.state.filteredItems,
         appState.state.todoItems
@@ -39,14 +40,21 @@ export default function createEventHandlers(
       taskElement.classList.add('is-disappearing');
       setTimeout(() => {
         appState.removeTask(checkboxElement.id);
+        if (appState.state.searchQuery) {
+          appState.filterTasks();
+        }
+
         renderManager.render(
           appState.state.filteredItems,
           appState.state.todoItems
         );
-        renderManager.toggleDisableSearchInput(
-          appState.state.todoItems,
-          searchInputElement
-        );
+        if (!appState.state.todoItems.length) {
+          searchInputElement.value = '';
+          renderManager.toggleDisableSearchInput(
+            appState.state.todoItems,
+            searchInputElement
+          );
+        }
       }, 400);
     }
   };
@@ -109,6 +117,10 @@ export default function createEventHandlers(
         );
       } else {
         renderManager.renderTasks(
+          appState.state.filteredItems,
+          appState.state.todoItems
+        );
+        renderManager.renderEmptyMessage(
           appState.state.filteredItems,
           appState.state.todoItems
         );

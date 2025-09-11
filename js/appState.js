@@ -46,6 +46,11 @@ export default function createAppState(localStorageKey = 'todo-items') {
 
   function removeTask(id) {
     state.todoItems = state.todoItems.filter((todo) => todo.id !== id);
+    if (state.filteredItems && state.filteredItems.length) {
+      state.filteredItems = state.filteredItems.filter(
+        (todo) => todo.id !== id
+      );
+    }
 
     setItemsToLocalStorage(state.todoItems);
   }
@@ -64,13 +69,17 @@ export default function createAppState(localStorageKey = 'todo-items') {
   }
 
   function filterTasks() {
-    const queryFormatted = state.searchQuery.toLowerCase();
+    if (state.searchQuery.length > 0) {
+      const queryFormatted = state.searchQuery.toLowerCase();
+      state.filteredItems = state.todoItems.filter(({ title }) => {
+        const titleFormatted = title.toLowerCase();
 
-    state.filteredItems = state.todoItems.filter(({ title }) => {
-      const titleFormatted = title.toLowerCase();
-
-      return titleFormatted.includes(queryFormatted);
-    });
+        return titleFormatted.includes(queryFormatted);
+      });
+    } else {
+      console.log(state.searchQuery);
+      resetFilter();
+    }
   }
 
   function resetFilter() {
