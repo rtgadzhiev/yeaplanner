@@ -89,6 +89,10 @@ export default function createEventHandlers(
           appState.state.filteredItems,
           appState.state.todoItems
         );
+        renderManager.renderEmptyMessage(
+          appState.state.filteredItems,
+          appState.state.todoItems
+        );
       }
       return;
     }
