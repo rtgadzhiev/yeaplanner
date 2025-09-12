@@ -50,6 +50,7 @@ export default function createEventHandlers(
         );
         if (!appState.state.todoItems.length) {
           searchInputElement.value = '';
+          appState.state.searchQuery = '';
           renderManager.toggleDisableSearchInput(
             appState.state.todoItems,
             searchInputElement

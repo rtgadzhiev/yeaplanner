@@ -77,7 +77,6 @@ export default function createAppState(localStorageKey = 'todo-items') {
         return titleFormatted.includes(queryFormatted);
       });
     } else {
-      console.log(state.searchQuery);
       resetFilter();
     }
   }
