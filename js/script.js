@@ -7,23 +7,21 @@ import initDragAndDrop from './dragAndDrop.js';
 const appState = createAppState();
 const selectors = createSelectors();
 
-const newTaskFormElement = document.querySelector('[data-js-new-task-form]');
+const newTaskFormElement = document.querySelector(selectors.newTaskForm);
 const newTaskFormInputElement = document.querySelector(
-  '[data-js-new-task-form-input]'
+  selectors.newTaskFormInput
 );
 const allTasksCounterElement = document.querySelector(
-  '[data-js-all-tasks-counter]'
+  selectors.allTasksCounter
 );
 const completedTasksCounterElement = document.querySelector(
-  '[data-js-completed-tasks-counter]'
+  selectors.completedTasksCounter
 );
-const todoListElement = document.querySelector('[data-js-todo-list]');
-const emptyMessageElement = document.querySelector(
-  '[data-js-todo-empty-message]'
-);
-const searchFormElement = document.querySelector('[data-js-search-form]');
+const todoListElement = document.querySelector(selectors.todoList);
+const emptyMessageElement = document.querySelector(selectors.emptyMessage);
+const searchFormElement = document.querySelector(selectors.searchForm);
 const searchInputElement = searchFormElement.querySelector(
-  '[ data-js-search-form-input]'
+  selectors.searchInput
 );
 
 const renderManager = createRenderManager(
