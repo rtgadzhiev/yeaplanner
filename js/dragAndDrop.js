@@ -14,7 +14,9 @@ export default function initDragAndDrop(appState, todoListElement) {
       target.classList.remove('is-dragging');
     }
 
-    appState.updateTasksOrder(appState.state.todoItems);
+    const todoItems = appState.getTodoItems();
+    const newTasksOrder = updateTasksOrder(todoItems);
+    appState.setItemsToLocalStorage(newTasksOrder);
   };
 
   const onDragOver = (event) => {
@@ -52,9 +54,22 @@ export default function initDragAndDrop(appState, todoListElement) {
     ).element;
   }
 
+  function updateTasksOrder(items) {
+    const taskElementsArray = [...document.querySelectorAll('.todo-item')];
+
+    const newTasksOrder = taskElementsArray.map((taskElement) => {
+      const taskId = taskElement.querySelector('input').id;
+
+      return items.find((todo) => todo.id === taskId);
+    });
+
+    return newTasksOrder;
+  }
+
   return {
     onDragStart,
     onDragEnd,
     onDragOver,
+    updateTasksOrder,
   };
 }

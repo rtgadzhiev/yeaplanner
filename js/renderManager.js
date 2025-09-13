@@ -1,10 +1,11 @@
 export default function createRenderManager(
+  appState,
   allTasksCounterElement,
   completedTasksCounterElement,
   todoListElement,
   emptyMessageElement
 ) {
-  function renderCounters(todoItems) {
+  function renderCounters(todoItems = appState.getTodoItems()) {
     const allTasksNumber = todoItems.length;
     const completedTasksNumber = todoItems.filter(
       (task) => task.isChecked
@@ -16,7 +17,10 @@ export default function createRenderManager(
     }`;
   }
 
-  function renderTasks(filteredItems, todoItems) {
+  function renderTasks(
+    filteredItems = appState.getFilteredItems(),
+    todoItems = appState.getTodoItems()
+  ) {
     const items = filteredItems ?? todoItems;
 
     todoListElement.innerHTML = items
@@ -83,7 +87,10 @@ export default function createRenderManager(
       .join('');
   }
 
-  function renderEmptyMessage(filteredItems, todoItems) {
+  function renderEmptyMessage(
+    filteredItems = appState.getFilteredItems(),
+    todoItems = appState.getTodoItems()
+  ) {
     const isEmptyItems = todoItems.length === 0;
     const isEmptyFilteredItems = filteredItems && filteredItems.length === 0;
 
@@ -166,7 +173,10 @@ export default function createRenderManager(
       : '';
   }
 
-  function toggleDisableSearchInput(todoItems, searchInputElement) {
+  function toggleDisableSearchInput(
+    searchInputElement,
+    todoItems = appState.getTodoItems()
+  ) {
     if (todoItems.length === 0) {
       searchInputElement.setAttribute('disabled', true);
     } else {
@@ -174,7 +184,17 @@ export default function createRenderManager(
     }
   }
 
-  function render(filteredItems, todoItems) {
+  function clearInputValue(inputElement, isFocus = false) {
+    inputElement.value = '';
+    if (isFocus) {
+      inputElement.focus();
+    }
+  }
+
+  function render(
+    filteredItems = appState.getFilteredItems(),
+    todoItems = appState.getTodoItems()
+  ) {
     renderCounters(todoItems);
     renderTasks(filteredItems, todoItems);
     renderEmptyMessage(filteredItems, todoItems);
@@ -186,5 +206,8 @@ export default function createRenderManager(
     renderTasks,
     render,
     toggleDisableSearchInput,
+    clearInputValue,
   };
 }
+
+// TODO: svg sprite

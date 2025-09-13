@@ -1,7 +1,11 @@
 import createAppState from './appState.js';
+import createSelectors from './selectors.js';
 import createRenderManager from './renderManager.js';
 import createEventHandlers from './eventHandlers.js';
 import initDragAndDrop from './dragAndDrop.js';
+
+const appState = createAppState();
+const selectors = createSelectors();
 
 const newTaskFormElement = document.querySelector('[data-js-new-task-form]');
 const newTaskFormInputElement = document.querySelector(
@@ -22,8 +26,8 @@ const searchInputElement = searchFormElement.querySelector(
   '[ data-js-search-form-input]'
 );
 
-const appState = createAppState();
 const renderManager = createRenderManager(
+  appState,
   allTasksCounterElement,
   completedTasksCounterElement,
   todoListElement,
@@ -37,11 +41,8 @@ const eventHandlers = createEventHandlers(
 );
 const dragAndDrop = initDragAndDrop(appState, todoListElement);
 
-renderManager.render(appState.state.filteredItems, appState.state.todoItems);
-renderManager.toggleDisableSearchInput(
-  appState.state.todoItems,
-  searchInputElement
-);
+renderManager.render();
+renderManager.toggleDisableSearchInput(searchInputElement);
 
 newTaskFormElement.addEventListener(
   'submit',

@@ -1,11 +1,35 @@
-export default function createAppState(localStorageKey = 'todo-items') {
+export default function createAppState() {
   const state = {
-    todoItems: getItemsFromLocalStorage(localStorageKey),
+    todoItems: getItemsFromLocalStorage(),
     filteredItems: null,
     searchQuery: '',
   };
 
-  function getItemsFromLocalStorage() {
+  function getTodoItems() {
+    return state.todoItems;
+  }
+
+  function getFilteredItems() {
+    return state.filteredItems;
+  }
+
+  function getSearchQuery() {
+    return state.searchQuery;
+  }
+
+  function setTodoItems(items) {
+    state.todoItems = items;
+  }
+
+  function setFilteredItems(items) {
+    state.filteredItems = items;
+  }
+
+  function setSearchQuery(value) {
+    state.searchQuery = value;
+  }
+
+  function getItemsFromLocalStorage(localStorageKey = 'todo-items') {
     const data = localStorage.getItem(localStorageKey);
 
     if (!data) return [];
@@ -19,20 +43,8 @@ export default function createAppState(localStorageKey = 'todo-items') {
     }
   }
 
-  function setItemsToLocalStorage(items) {
+  function setItemsToLocalStorage(items, localStorageKey = 'todo-items') {
     localStorage.setItem(localStorageKey, JSON.stringify(items));
-  }
-
-  function updateTasksOrder(items) {
-    const taskElementsArray = [...document.querySelectorAll('.todo-item')];
-
-    const newTasksOrder = taskElementsArray.map((taskElement) => {
-      const taskId = taskElement.querySelector('input').id;
-
-      return items.find((todo) => todo.id === taskId);
-    });
-
-    setItemsToLocalStorage(newTasksOrder);
   }
 
   function addTask(title) {
@@ -86,10 +98,14 @@ export default function createAppState(localStorageKey = 'todo-items') {
   }
 
   return {
-    state,
+    getTodoItems,
+    getFilteredItems,
+    getSearchQuery,
+    setTodoItems,
+    setFilteredItems,
+    setSearchQuery,
     getItemsFromLocalStorage,
     setItemsToLocalStorage,
-    updateTasksOrder,
     addTask,
     removeTask,
     toggleCheckedState,

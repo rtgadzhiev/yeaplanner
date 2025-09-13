@@ -7,22 +7,14 @@ export default function createEventHandlers(
   const onNewTaskFormSubmit = (event) => {
     event.preventDefault();
 
-    const newTaskTitle = newTaskFormInputElement.value;
+    const newTaskTitle = newTaskFormInputElement.value.trim();
 
-    if (newTaskTitle.trim().length) {
+    if (newTaskTitle.length) {
       appState.addTask(newTaskTitle);
       appState.filterTasks();
-      renderManager.render(
-        appState.state.filteredItems,
-        appState.state.todoItems
-      );
-      renderManager.toggleDisableSearchInput(
-        appState.state.todoItems,
-        searchInputElement
-      );
-
-      newTaskFormInputElement.value = '';
-      newTaskFormInputElement.focus();
+      renderManager.render();
+      renderManager.toggleDisableSearchInput(searchInputElement);
+      renderManager.clearInputValue(newTaskFormInputElement, true);
     }
   };
 
@@ -40,21 +32,15 @@ export default function createEventHandlers(
       taskElement.classList.add('is-disappearing');
       setTimeout(() => {
         appState.removeTask(checkboxElement.id);
-        if (appState.state.searchQuery) {
+        if (appState.getSearchQuery()) {
           appState.filterTasks();
         }
 
-        renderManager.render(
-          appState.state.filteredItems,
-          appState.state.todoItems
-        );
-        if (!appState.state.todoItems.length) {
-          searchInputElement.value = '';
-          appState.state.searchQuery = '';
-          renderManager.toggleDisableSearchInput(
-            appState.state.todoItems,
-            searchInputElement
-          );
+        renderManager.render();
+        if (!appState.getTodoItems().length) {
+          renderManager.clearInputValue(searchInputElement);
+          appState.setSearchQuery('');
+          renderManager.toggleDisableSearchInput(searchInputElement);
         }
       }, 400);
     }
@@ -77,23 +63,19 @@ export default function createEventHandlers(
       );
 
       if (newTaskText) {
-        appState.state.todoItems = appState.state.todoItems.map((todo) => {
+        const todoItems = appState.getTodoItems();
+        const newTodoItems = todoItems.map((todo) => {
           if (todo.id === checkboxElement.id) {
             todo.title = newTaskText;
             return todo;
           }
           return todo;
         });
-        appState.setItemsToLocalStorage(appState.state.todoItems);
+        appState.setTodoItems(newTodoItems);
+        appState.setItemsToLocalStorage(newTodoItems);
         appState.filterTasks();
-        renderManager.renderTasks(
-          appState.state.filteredItems,
-          appState.state.todoItems
-        );
-        renderManager.renderEmptyMessage(
-          appState.state.filteredItems,
-          appState.state.todoItems
-        );
+        renderManager.renderTasks();
+        renderManager.renderEmptyMessage();
       }
       return;
     }
@@ -102,7 +84,7 @@ export default function createEventHandlers(
   const onChange = ({ target }) => {
     if (target.matches('[data-js-todo-item-checkbox]')) {
       appState.toggleCheckedState(target.id);
-      renderManager.renderCounters(appState.state.todoItems);
+      renderManager.renderCounters();
     }
   };
 
@@ -111,40 +93,19 @@ export default function createEventHandlers(
   };
 
   const onSearchInputChange = ({ target }) => {
-    appState.state.searchQuery = target.value.trim();
+    const searchInputValueFormatted = target.value.trim();
 
-    if (appState.state.searchQuery.length > 0) {
+    appState.setSearchQuery(searchInputValueFormatted);
+    const searchQuery = appState.getSearchQuery();
+
+    if (searchQuery.length > 0) {
       appState.filterTasks();
-      if (appState.state.filteredItems.length === 0) {
-        renderManager.renderEmptyMessage(
-          appState.state.filteredItems,
-          appState.state.todoItems
-        );
-        renderManager.renderTasks(
-          appState.state.filteredItems,
-          appState.state.todoItems
-        );
-      } else {
-        renderManager.renderTasks(
-          appState.state.filteredItems,
-          appState.state.todoItems
-        );
-        renderManager.renderEmptyMessage(
-          appState.state.filteredItems,
-          appState.state.todoItems
-        );
-      }
     } else {
       appState.resetFilter();
-      renderManager.renderEmptyMessage(
-        appState.state.filteredItems,
-        appState.state.todoItems
-      );
-      renderManager.renderTasks(
-        appState.state.filteredItems,
-        appState.state.todoItems
-      );
     }
+
+    renderManager.renderEmptyMessage();
+    renderManager.renderTasks();
   };
 
   return {
