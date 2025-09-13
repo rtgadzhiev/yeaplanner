@@ -94,35 +94,36 @@
   flex-shrink: 0;
   min-width: 34px;
   height: 34px;
+  color: var(--color-gray-300);
+}
+
+.todo-item__button-icon {
+  fill: currentColor;
 }
 
 @media (hover: hover) {
-  .todo-item__button--remove {
-    &:hover {
-      color: var(--color-red);
-      background-color: var(--color-gray-500);
-    }
+  .todo-item__button:hover {
+    background-color: var(--color-gray-500);
   }
 
-  .todo-item__button--edit {
-    &:hover {
-      background-color: var(--color-gray-500);
-      color: var(--color-blue);
-    }
+  .todo-item__button--remove:hover {
+    color: var(--color-red);
+  }
+
+  .todo-item__button--edit:hover {
+    color: var(--color-blue);
   }
 }
 @media (hover: none) {
-  .todo-item__button--remove {
-    &:active {
-      color: var(--color-red);
-      background-color: var(--color-gray-500);
-    }
+  .todo-item__button:active {
+    background-color: var(--color-gray-500);
   }
 
-  .todo-item__button--edit {
-    &:active {
-      background-color: var(--color-gray-500);
-      color: var(--color-blue);
-    }
+  .todo-item__button--remove:active {
+    color: var(--color-red);
+  }
+
+  .todo-item__button--edit:active {
+    color: var(--color-blue);
   }
 }

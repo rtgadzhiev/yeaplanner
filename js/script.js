@@ -2,7 +2,7 @@ import createAppState from './appState.js';
 import createSelectors from './selectors.js';
 import createRenderManager from './renderManager.js';
 import createEventHandlers from './eventHandlers.js';
-import initDragAndDrop from './dragAndDrop.js';
+import createDragAndDrop from './dragAndDrop.js';
 
 const appState = createAppState();
 const selectors = createSelectors();
@@ -37,7 +37,7 @@ const eventHandlers = createEventHandlers(
   newTaskFormInputElement,
   searchInputElement
 );
-const dragAndDrop = initDragAndDrop(appState, todoListElement);
+const dragAndDrop = createDragAndDrop(appState, todoListElement);
 
 renderManager.render();
 renderManager.toggleDisableSearchInput(searchInputElement);

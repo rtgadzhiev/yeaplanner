@@ -1,4 +1,4 @@
-export default function initDragAndDrop(appState, todoListElement) {
+export default function createDragAndDrop(appState, todoListElement) {
   const onDragStart = ({ target }) => {
     const isDraggable = target.hasAttribute('draggable');
 

@@ -37,6 +37,8 @@ export default function createEventHandlers(
         }
 
         renderManager.render();
+        searchInputElement.focus();
+
         if (!appState.getTodoItems().length) {
           renderManager.clearInputValue(searchInputElement);
           appState.setSearchQuery('');
